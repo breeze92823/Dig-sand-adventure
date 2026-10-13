@@ -1,0 +1,70 @@
+name: Deploy to Bloxity
+
+on:
+  push:
+    branches: [main, dev]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Determine deploy channel
+        id: channel
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "channel=prod" >> "$GITHUB_OUTPUT"
+          else
+            echo "channel=dev" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate deploy config
+        # Fail loudly instead of POSTing to a broken URL / with an empty token.
+        run: |
+          if [ -z "${GAME_ID}" ]; then
+            echo "::error::LEGION_GAME_ID is not set (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+          if [ -z "${DEPLOY_TOKEN}" ]; then
+            echo "::error::LEGION_DEPLOY_TOKEN is not set (Settings > Secrets and variables > Actions > Secrets)."
+            exit 1
+          fi
+        env:
+          GAME_ID: ${{ vars.LEGION_GAME_ID || secrets.LEGION_GAME_ID }}
+          DEPLOY_TOKEN: ${{ secrets.LEGION_DEPLOY_TOKEN }}
+
+      - name: Build
+        # prod = `vite build`; dev channel = `vite build --mode development`.
+        # VITE_DEV_MODE is deliberately left unset so deployed builds use the
+        # real Bloxity SDK/CDN.
+        run: |
+          if [ "${{ steps.channel.outputs.channel }}" = "prod" ]; then
+            npm run build
+          else
+            npm run build:dev
+          fi
+
+      - name: Zip build
+        run: cd dist && zip -r ../build.zip . && cd ..
+
+      - name: Upload to Bloxity
+        run: |
+          curl -sS -f -X POST \
+            "https://api.bloxity.io/v1/hosting/games/${{ vars.LEGION_GAME_ID || secrets.LEGION_GAME_ID }}/frontend?channel=${{ steps.channel.outputs.channel }}&version=${{ github.sha }}" \
+            -H "Authorization: Bearer ${{ secrets.LEGION_DEPLOY_TOKEN }}" \
+            -H "Content-Type: application/zip" \
+            --data-binary @build.zip \
+            -w "\nHTTP status: %{http_code}\n"
