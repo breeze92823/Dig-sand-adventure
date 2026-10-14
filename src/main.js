@@ -13,6 +13,7 @@ import { applyProportions, attachEquippedAccessories } from './avatar/loader.js'
 import { disposeAnimator, makeAnimator } from './avatar/animator.js'
 import { createLoading, markLoaded } from './loading.js'
 import { createHud } from './hud.js'
+import { createLoginButton } from './login.js'
 import { createLootDrops } from './lootDrops.js'
 import { createSell } from './sell.js'
 import { createShovels, shovelBonus } from './shovels.js'
@@ -56,6 +57,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, preset.dpr))
 document.body.appendChild(renderer.domElement)
 installInput(bloxity.showMenu, renderer.domElement)
 createHud()
+createLoginButton()
 createTouchControls({ showMenu: bloxity.showMenu })
 
 const scene = new Scene()

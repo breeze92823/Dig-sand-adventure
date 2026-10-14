@@ -31,6 +31,7 @@ class Remote {
     this.held = null
     this.animator = null
     this.avatarJson = null // what the current rig was built from
+    this.ready = false // hidden until the player's real look has loaded (or they have none)
     this.generation = 0
     this.shovel = START_SHOVEL
     this.nameText = null
@@ -59,12 +60,17 @@ class Remote {
   async syncAvatar(json) {
     if (json === this.avatarJson) return
     this.avatarJson = json
-    if (!json) return this.setAvatar(buildDefaultCharacter())
+    if (!json) {
+      this.setAvatar(buildDefaultCharacter())
+      this.ready = true
+      return
+    }
     const mine = ++this.generation
     let look = null
     try {
       look = JSON.parse(json)
     } catch {
+      this.ready = true // unreadable look: show the default character
       return
     }
     try {
@@ -74,7 +80,9 @@ class Remote {
       if (mine !== this.generation) return
       applyProportions(group, look?.proportions)
       this.setAvatar(group)
+      this.ready = true
     } catch (err) {
+      this.ready = true // keep the default look rather than staying invisible
       console.warn('[remotePlayers] avatar load failed', err) // keep the current look, retry shortly
       setTimeout(() => {
         if (mine === this.generation) this.avatarJson = null
@@ -196,12 +204,14 @@ export function createRemotePlayers(scene) {
         keep.add(id)
         let r = remotes.get(id)
         if (!r) remotes.set(id, (r = new Remote(root, petRoot)))
-        r.group.visible = d < NET.remoteFade
-        if (r.group.visible) {
+        const inRange = d < NET.remoteFade
+        if (inRange) {
           r.update(p, dt)
-          r.syncPets(p, dt, t, d < PET_RANGE && petOwners < PET_OWNERS && !!p.pets && ++petOwners > 0)
-          if (p.trail && d < TRAIL_RANGE && trails < REMOTE_TRAILS) trailOut.push(r.trailSource(p, ++trails, d < TRAIL_NEAR ? 0.8 : 0.35))
+          r.group.visible = r.ready
+          r.syncPets(p, dt, t, r.ready && d < PET_RANGE && petOwners < PET_OWNERS && !!p.pets && ++petOwners > 0)
+          if (r.ready && p.trail && d < TRAIL_RANGE && trails < REMOTE_TRAILS) trailOut.push(r.trailSource(p, ++trails, d < TRAIL_NEAR ? 0.8 : 0.35))
         } else {
+          r.group.visible = false
           r.pets.clear()
           r.placed = false // out of range: skip the work, snap into place when it comes back
           r.group.position.set(p.x, p.y, p.z)
