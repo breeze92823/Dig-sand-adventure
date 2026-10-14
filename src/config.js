@@ -150,6 +150,7 @@ export const DIG = {
   dustLife: 1.5, // s
   puffCount: 48, // grains per shovel hit / throw
   doneBurst: 200, // grains when a cell is dug through
+  sandPerCell: 10, // sand counter gain per cell dug through
   sandColor: '#e7c47a',
   floorTint: '#e0c8aa', // multiplier over the packed-soil texture (textures.js dirtTile), x1 band
   floorTintDeep: '#9fb0c4', // same, deepest band (cold slate)

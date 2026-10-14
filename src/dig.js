@@ -390,6 +390,7 @@ void main() {`)
     if (!wasDone && !blocked(bi, bj)) {
       doneCells.add(bi * 1000 + bj)
       cellsDug++
+      player.sand += DIG.sandPerCell
       doneFlag = true
       burst(cellX, cellZ, DIG.doneBurst, 2.2, 1.6)
     }

@@ -67,12 +67,19 @@ class Remote {
     } catch {
       return
     }
-    const group = await loadBaseCharacter()
-    if (mine !== this.generation) return
-    await attachEquippedAccessories(group, look?.equipped, { skinTextureUrl: look?.skin || undefined })
-    if (mine !== this.generation) return
-    applyProportions(group, look?.proportions)
-    this.setAvatar(group)
+    try {
+      const group = await loadBaseCharacter()
+      if (mine !== this.generation) return
+      await attachEquippedAccessories(group, look?.equipped, { skinTextureUrl: look?.skin || undefined })
+      if (mine !== this.generation) return
+      applyProportions(group, look?.proportions)
+      this.setAvatar(group)
+    } catch (err) {
+      console.warn('[remotePlayers] avatar load failed', err) // keep the current look, retry shortly
+      setTimeout(() => {
+        if (mine === this.generation) this.avatarJson = null
+      }, 5000)
+    }
   }
 
   syncName(name) {
