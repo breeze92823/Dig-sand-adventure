@@ -60,30 +60,28 @@ class Remote {
   async syncAvatar(json) {
     if (json === this.avatarJson) return
     this.avatarJson = json
-    if (!json) {
-      this.setAvatar(buildDefaultCharacter())
-      this.ready = true
-      return
-    }
     const mine = ++this.generation
-    let look = null
-    try {
-      look = JSON.parse(json)
-    } catch {
-      this.ready = true // unreadable look: show the default character
-      return
+    let look = null // null = guest: the plain Bloxity base character
+    if (json) {
+      try {
+        look = JSON.parse(json)
+      } catch {
+        look = null
+      }
     }
     try {
       const group = await loadBaseCharacter()
       if (mine !== this.generation) return
-      await attachEquippedAccessories(group, look?.equipped, { skinTextureUrl: look?.skin || undefined })
-      if (mine !== this.generation) return
-      applyProportions(group, look?.proportions)
+      if (look) {
+        await attachEquippedAccessories(group, look.equipped, { skinTextureUrl: look.skin || undefined })
+        if (mine !== this.generation) return
+        applyProportions(group, look.proportions)
+      }
       this.setAvatar(group)
       this.ready = true
     } catch (err) {
       this.ready = true // keep the default look rather than staying invisible
-      console.warn('[remotePlayers] avatar load failed', err) // keep the current look, retry shortly
+      console.warn('[remotePlayers] avatar load failed', err) // retry shortly
       setTimeout(() => {
         if (mine === this.generation) this.avatarJson = null
       }, 5000)

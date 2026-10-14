@@ -32,9 +32,9 @@ const { skin: SKIN, suit: SUIT, hair: HAIR } = CHARACTER_COLORS
 // leaves the torso short of the shoulder pivot, so the arms hang from empty
 // space instead of the body. X/Z (width/depth) stay this game's own slimmer
 // build.
-const TORSO = [1.35, 2.4, 0.68]
-const ARM = [0.64, 2.4, 0.64]
-const LEG = [0.66, 2.4, 0.68]
+const TORSO = [2.8, 2.4, 1.2]
+const ARM = [1.2, 2.4, 1.2]
+const LEG = [1.2, 2.4, 1.2]
 const HEAD_R = 0.8
 
 const cache = {}
@@ -81,7 +81,7 @@ const ARM_Y = -ARM[1] / 2
 // The shoulder pivot (ArmR_Offset/ArmL_Offset) sits 0.4 units forward of the
 // spine, so the arm mesh needs the same backward offset to hang centred
 // under the torso instead of out in front of it.
-const ARM_Z = -0.4
+const ARM_Z = -0.4 // (arms are 1.2 wide: inner edge at the torso side, x = +-2 -/+ 0.6)
 const LEG_Y = -LEG[1] / 2
 const HEAD_Y = HEAD_R
 
