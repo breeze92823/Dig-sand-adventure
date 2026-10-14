@@ -6,6 +6,7 @@
 // player group owns world placement).
 import { ANIM } from '../config.js'
 import { PlayerRig, PoseBuffer } from './rig.js'
+import { crossed, strokeAt } from './digStroke.js'
 
 const TAU = Math.PI * 2
 const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v)
@@ -45,6 +46,9 @@ class PlayerAnimator {
     this.idleTime = 0
     this.airTime = 0
     this.bank = 0
+    // Digging layer state, read by heldShovel.js: w = blend 0..1, u = stroke cycle 0..1, the
+    // stroke fields (lean / crouch / dy / dz / tilt / yaw), and one-shot impact / thrown events.
+    this.dig = { w: 0, u: 0, lean: 0, crouch: 0, dy: 0, dz: 0, tilt: 0, yaw: 0, impact: false, thrown: false }
   }
 
   dispose() {
@@ -60,6 +64,7 @@ class PlayerAnimator {
     this.resolveState(dt, input)
     this.writePose(dt, input)
     this.blend(dt)
+    this.applyDig(dt, input)
     this.rig.applyPose(this.output)
     this.applyVisual(dt, input)
   }
@@ -174,6 +179,39 @@ class PlayerAnimator {
     } else {
       this.output.copyFrom(this.target)
     }
+  }
+
+  // Digging layer: advances the stroke and blends the torso / legs towards it (lean, knee bend,
+  // body dip). The arms are placed afterwards by heldShovel.js (IK onto the shovel).
+  applyDig(dt, input) {
+    const d = this.dig
+    const D = ANIM.dig
+    const want = input.digging && input.grounded && input.speed < D.maxSpeed
+    d.w += ((want ? 1 : 0) - d.w) * (1 - Math.exp(-D.blendRate * dt))
+    if (!want && d.w < 0.002) {
+      d.w = 0
+      d.u = 0
+      return
+    }
+    if (want) {
+      const scale = clamp(1 + Math.log10(Math.max(1, input.strength ?? 1)) * D.strengthLog, 1, D.maxScale)
+      const prev = d.u
+      d.u = (d.u + (dt * scale) / D.cycle) % 1
+      if (crossed(prev, d.u, D.impactU)) d.impact = true
+      if (crossed(prev, d.u, D.throwU)) d.thrown = true
+    }
+    strokeAt(d.u, d)
+    const p = this.layer
+    p.reset()
+    p.set('Spine1', d.lean)
+    p.set('Spine2', d.lean * 0.5)
+    p.set('Neck1', -d.lean * 0.8)
+    p.set('LegL1', -d.crouch * 0.55)
+    p.set('LegR1', -d.crouch * 0.55)
+    p.set('LegL2', d.crouch * 1.0)
+    p.set('LegR2', d.crouch * 1.0)
+    p.bobY = -d.crouch * 0.2
+    this.output.lerpBetween(this.output, p, d.w)
   }
 
   applyVisual(dt, input) {
