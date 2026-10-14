@@ -50,6 +50,11 @@ jobs:
         # prod = `vite build`; dev channel = `vite build --mode development`.
         # VITE_DEV_MODE is deliberately left unset so deployed builds use the
         # real Bloxity SDK/CDN.
+        # The server URLs are optional repo variables: when empty the Bloxity SDK
+        # resolves each channel's backend endpoint at runtime.
+        env:
+          VITE_SERVER_URL_DEV: ${{ vars.VITE_SERVER_URL_DEV }}
+          VITE_SERVER_URL_MAIN: ${{ vars.VITE_SERVER_URL_MAIN }}
         run: |
           if [ "${{ steps.channel.outputs.channel }}" = "prod" ]; then
             npm run build

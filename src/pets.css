@@ -1,0 +1,43 @@
+/* pets window; layout mirrors the rebirth / loot index windows (backdrop under the HUD, viewport-fit em, studded header) */
+.pt-backdrop { position: fixed; inset: 0; z-index: 9; background: rgba(255, 220, 160, 0.08); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); }
+.pt-overlay { --pt-studs: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Crect x='4.5' y='4.5' width='18' height='18' rx='4' fill='none' stroke='rgba(0,0,0,0.09)' stroke-width='2'/%3E%3Crect x='3.5' y='3.5' width='18' height='18' rx='4' fill='none' stroke='rgba(255,255,255,0.16)' stroke-width='2'/%3E%3C/svg%3E"); position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; font-family: Fredoka, system-ui, sans-serif; user-select: none; font-size: clamp(3px, min(0.8333vw, 1.62vh), 20px); }
+.pt-backdrop[hidden], .pt-overlay[hidden] { display: none; }
+.pt-overlay button { cursor: pointer; border: 0; padding: 0; margin: 0; color: #fff; font: inherit; font-weight: 700; }
+.pt-overlay button:active { transform: scale(0.97); }
+.pt-overlay .pt-title, .pt-overlay .pt-luck, .pt-overlay .pt-card-mult, .pt-overlay .pt-card-name, .pt-overlay .pt-name, .pt-overlay .pt-mult, .pt-overlay .pt-counts, .pt-overlay .pt-total, .pt-overlay .pt-best, .pt-overlay .pt-multi, .pt-overlay .pt-act, .pt-overlay .pt-del-confirm, .pt-overlay .pt-empty, .pt-overlay .pt-check { color: #fff; line-height: 1; font-weight: 700; -webkit-text-stroke: 0.16em #000; paint-order: stroke fill; text-shadow: 0 0.06em 0 #000; }
+.pt-overlay .pt-head, .pt-overlay .pt-best, .pt-overlay .pt-multi, .pt-overlay .pt-luck { background-image: var(--pt-studs); background-size: 1.625em 1.625em; }
+.pt-overlay .pt-panel { position: relative; width: 75.6em; height: 52.4em; background: #2e2e33; border: 0.2em solid #1b1f3b; overflow: hidden; box-sizing: border-box; display: flex; flex-direction: column; }
+.pt-overlay .pt-head { flex: none; position: relative; height: 6.25em; border-bottom: 0.95em solid #0a86bd; background-color: #1ec6f6; box-shadow: inset 0 0.15em 0 rgba(255, 255, 255, 0.25); }
+.pt-overlay .pt-logo { position: absolute; left: 0.25em; top: -0.2em; z-index: 1; font-size: 6em; line-height: 1; transform: rotate(-8deg); filter: drop-shadow(0 0.04em 0 rgba(0, 0, 0, 0.45)); pointer-events: none; }
+.pt-overlay .pt-title { position: absolute; left: 1.9em; top: 50%; transform: translateY(-50%); font-size: 5.4em; -webkit-text-stroke-width: 0.1em; }
+.pt-overlay .pt-luck { position: absolute; right: 2.9em; top: 0.35em; height: 1.7em; display: flex; align-items: center; gap: 0.4em; padding: 0 0.6em 0 0.3em; white-space: nowrap; font-size: 2.6em; -webkit-text-stroke-width: 0.12em; background-color: #2fb04a; border: 0.1em solid #145a22; box-shadow: inset 0 0.07em 0 rgba(255, 255, 255, 0.3); }
+.pt-overlay .pt-luck i { font-style: normal; }
+.pt-overlay .pt-close { position: absolute; right: 0.75em; top: 0.55em; width: 5.3em; height: 5.45em; background: #e1060a; border: 0.22em solid #1a0606; box-shadow: inset 0 0 0 0.18em #ff3636; box-sizing: border-box; display: grid; place-items: center; }
+.pt-overlay .pt-close::before { content: 'X'; font-size: 3.9em; color: #fff; -webkit-text-stroke: 0.15em #000; paint-order: stroke fill; text-shadow: 0 0.05em 0 #000; }
+.pt-overlay .pt-body { flex: 1; min-height: 0; display: flex; gap: 2em; padding: 1.8em 2.4em 1em; }
+.pt-overlay .pt-grid { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 13em; gap: 1em; align-content: start; overflow-y: auto; padding-right: 0.5em; scrollbar-width: thin; }
+.pt-overlay .pt-card { position: relative; border: 0.2em solid #1f1f1f; background-color: #555; box-sizing: border-box; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 0.7em; overflow: hidden; background-image: radial-gradient(circle at 50% 45%, transparent 25%, rgba(0, 0, 0, 0.35) 100%); }
+.pt-overlay .pt-card.equipped { border-color: #3fd44f; background-color: #3c6a3a; }
+.pt-overlay .pt-card.selected { box-shadow: 0 0 0 0.25em #fff; }
+.pt-overlay .pt-card.marked { border-color: #ff4545; background-color: #7a3030; }
+.pt-overlay .pt-card-icon { position: absolute; left: 0; right: 0; top: 0.5em; font-size: 5.4em; line-height: 1.3; text-align: center; filter: drop-shadow(0 0.05em 0.04em rgba(0, 0, 0, 0.6)); }
+.pt-overlay .pt-card-name { position: relative; font-size: 2.2em; -webkit-text-stroke-width: 0.12em; }
+.pt-overlay .pt-card-mult { position: absolute; right: 0.5em; top: 0.4em; font-size: 2.2em; color: #5dff5d; -webkit-text-stroke-width: 0.14em; }
+.pt-overlay .pt-check { position: absolute; left: 0.3em; top: 0.1em; font-size: 3.4em; color: #3fe85a; }
+.pt-overlay .pt-detail { flex: none; width: 22em; box-sizing: border-box; background: #101a2c; border: 0.2em solid #070d18; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1em; padding: 1.4em; }
+.pt-overlay .pt-empty { font-size: 3.2em; text-align: center; line-height: 1.15; -webkit-text-stroke-width: 0.1em; }
+.pt-overlay .pt-big { font-size: 9em; line-height: 1; filter: drop-shadow(0 0.05em 0.04em rgba(0, 0, 0, 0.6)); }
+.pt-overlay .pt-name { font-size: 3.4em; -webkit-text-stroke-width: 0.1em; }
+.pt-overlay .pt-rarity { font-size: 2.2em; font-weight: 700; -webkit-text-stroke: 0.12em #000; paint-order: stroke fill; line-height: 1; }
+.pt-overlay .pt-mult { font-size: 2.2em; text-align: center; color: #5dff5d; -webkit-text-stroke-width: 0.12em; }
+.pt-overlay .pt-act, .pt-overlay .pt-del-confirm { width: 100%; height: 2.4em; font-size: 2.4em; -webkit-text-stroke-width: 0.12em; border: 0.07em solid #1c1c22; border-bottom: 0.16em solid rgba(0, 0, 0, 0.4); }
+.pt-overlay .pt-act.on { background: #4ccf3d; }
+.pt-overlay .pt-act.off { background: #f6a21c; }
+.pt-overlay .pt-act.del, .pt-overlay .pt-del-confirm { background: #e5323a; }
+.pt-overlay .pt-foot { flex: none; display: flex; align-items: center; gap: 1.2em; padding: 0.6em 2.4em 2em; min-width: 0; }
+.pt-overlay .pt-counts { display: flex; flex-direction: column; gap: 0.35em; font-size: 2.4em; flex: none; -webkit-text-stroke-width: 0.12em; }
+.pt-overlay .pt-total { flex: 1; min-width: 0; font-size: 1.9em; line-height: 1.15; text-align: center; color: #5dff5d; -webkit-text-stroke-width: 0.12em; }
+.pt-overlay .pt-best, .pt-overlay .pt-multi { height: 3.4em; padding: 0 0.8em; flex: none; white-space: nowrap; font-size: 2em; -webkit-text-stroke-width: 0.12em; border: 0.07em solid #1c1c22; border-bottom: 0.16em solid rgba(0, 0, 0, 0.4); box-shadow: inset 0 0.07em 0 rgba(255, 255, 255, 0.3); }
+.pt-overlay .pt-best { background-color: #4ccf3d; }
+.pt-overlay .pt-multi { background-color: #e5323a; }
+.pt-overlay .pt-multi.active { background-color: #8a8a8d; }

@@ -1,0 +1,116 @@
+﻿/* loot index window; layout mirrors the rebirth window (backdrop under the HUD, viewport-fit em, studded header) */
+.lt-backdrop { position: fixed; inset: 0; z-index: 9; background: rgba(255, 220, 160, 0.08); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); }
+.lt-overlay { --lt-studs: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Crect x='4.5' y='4.5' width='18' height='18' rx='4' fill='none' stroke='rgba(0,0,0,0.09)' stroke-width='2'/%3E%3Crect x='3.5' y='3.5' width='18' height='18' rx='4' fill='none' stroke='rgba(255,255,255,0.16)' stroke-width='2'/%3E%3C/svg%3E"); position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; font-family: Fredoka, system-ui, sans-serif; user-select: none; font-size: clamp(3px, min(0.8333vw, 1.62vh), 20px); }
+.lt-backdrop[hidden], .lt-overlay[hidden] { display: none; }
+.lt-overlay button { cursor: pointer; border: 0; padding: 0; margin: 0; color: #fff; font: inherit; font-weight: 700; }
+.lt-overlay button:active { transform: scale(0.97); }
+.lt-overlay .lt-title, .lt-overlay .lt-found, .lt-overlay .lt-tab, .lt-overlay .lt-card-rarity, .lt-overlay .lt-card-name { color: #fff; line-height: 1; white-space: nowrap; font-weight: 700; -webkit-text-stroke: 0.16em #000; paint-order: stroke fill; text-shadow: 0 0.06em 0 #000; }
+.lt-overlay .lt-head, .lt-overlay .lt-tab { background-image: var(--lt-studs); background-size: 1.625em 1.625em; }
+.lt-overlay .lt-panel { position: relative; width: 75.6em; height: 52.4em; background: rgba(46, 46, 51, 0.94); border: 0.2em solid #1b1f3b; box-sizing: border-box; display: flex; flex-direction: column; }
+.lt-overlay .lt-head { flex: none; position: relative; height: 6.25em; border-bottom: 0.95em solid #0a86bd; background-color: #1ec6f6; box-shadow: inset 0 0.15em 0 rgba(255, 255, 255, 0.25); }
+.lt-overlay .lt-logo { position: absolute; left: 0.16em; top: -0.12em; z-index: 1; font-size: 8.4em; line-height: 1; transform: rotate(-10deg); filter: hue-rotate(295deg) saturate(1.4) drop-shadow(0 0.04em 0 rgba(0, 0, 0, 0.45)); pointer-events: none; }
+.lt-overlay .lt-title { position: absolute; left: 2.4em; top: 50%; transform: translateY(-50%); font-size: 5.4em; -webkit-text-stroke-width: 0.1em; }
+.lt-overlay .lt-close { position: absolute; right: 0.75em; top: 0.55em; width: 5.3em; height: 5.45em; background: #e1060a; border: 0.22em solid #1a0606; box-shadow: inset 0 0 0 0.18em #ff3636; box-sizing: border-box; display: grid; place-items: center; }
+.lt-overlay .lt-close::before { content: 'X'; font-size: 3.9em; color: #fff; -webkit-text-stroke: 0.15em #000; paint-order: stroke fill; text-shadow: 0 0.05em 0 #000; }
+.lt-overlay .lt-body { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 1.4em 3.2em 2.2em; }
+.lt-overlay .lt-found { font-size: 3.6em; padding: 0.15em 0 0.35em 0.8em; -webkit-text-stroke-width: 0.1em; }
+.lt-overlay .lt-tabs { flex: none; display: flex; gap: 1.4em; margin-bottom: 1.5em; }
+.lt-overlay .lt-tab { flex: 1; height: 1.75em; font-size: 3.1em; -webkit-text-stroke-width: 0.12em; background-color: #4ccf3d; border: 0.07em solid #1c1c22; border-bottom: 0.16em solid rgba(0, 0, 0, 0.4); box-shadow: inset 0 0.07em 0 rgba(255, 255, 255, 0.3); opacity: 0.65; }
+.lt-overlay .lt-tab.active, .lt-overlay .lt-rarity-btn { opacity: 1; }
+.lt-overlay .lt-tab[data-tab="found"] { background-color: #f6a21c; }
+.lt-overlay .lt-tab[data-tab="missing"] { background-color: #1aa6e8; }
+.lt-overlay .lt-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 14.4em; gap: 1.2em; align-content: start; overflow-y: auto; padding-right: 0.5em; scrollbar-width: thin; }
+.lt-overlay .lt-card { position: relative; border: 0.2em solid #1f1f1f; display: flex; align-items: flex-end; justify-content: center; padding: 0 0.4em 0.7em; box-sizing: border-box; overflow: hidden; background: radial-gradient(circle at 50% 45%, transparent 25%, rgba(0, 0, 0, 0.35) 100%), repeating-conic-gradient(from 0deg at 50% 45%, #46453f 0 7.5deg, #34332e 7.5deg 15deg); }
+.lt-overlay .lt-card-rarity { position: absolute; right: 0.6em; top: 0.5em; font-size: 1.9em; -webkit-text-stroke-width: 0.14em; }
+.lt-overlay .lt-card-icon { position: absolute; left: 0; right: 0; top: 0.28em; font-size: 6em; line-height: 1.3; text-align: center; filter: drop-shadow(0 0.05em 0.04em rgba(0, 0, 0, 0.6)); }
+.lt-overlay .lt-card.locked .lt-card-icon { filter: brightness(0); }
+.lt-overlay .lt-card-name { position: relative; font-size: 2.2em; line-height: 1.05; white-space: normal; text-align: center; -webkit-text-stroke-width: 0.12em; }
+
+/* "Press E" prompt and toast */
+.lt-prompt { position: fixed; left: 50%; bottom: 22vh; transform: translateX(-50%); z-index: 15; display: flex; align-items: center; gap: 0.7em; padding: 0.5em 1em 0.5em 0.6em; border-radius: 0.6em; background: rgba(20, 22, 40, 0.82); border: 0.12em solid #fff; color: #fff; font: 700 20px Fredoka, system-ui, sans-serif; cursor: pointer; user-select: none; }
+.lt-prompt[hidden], .lt-toast[hidden] { display: none; }
+.lt-prompt kbd { display: grid; place-items: center; width: 1.7em; height: 1.7em; border-radius: 0.35em; background: #fff; color: #111; font: inherit; }
+/* Same look as the reference: big outlined text near the top, above every window/overlay. */
+.lt-toast { position: fixed; left: 50%; top: 22%; transform: translateX(-50%); z-index: 2147483647; max-width: 90vw; text-align: center; color: #fff; font: 700 clamp(22px, 3.2vw, 34px) Fredoka, 'Arial Rounded MT Bold', system-ui, sans-serif; pointer-events: none; paint-order: stroke fill; -webkit-text-stroke: 0.2em #121212; text-shadow: 0 0.1em 0 #121212; opacity: 0; transition: opacity 0.25s; }
+.lt-toast.show { opacity: 1; animation: lt-toast-pop 0.28s ease-out; }
+.lt-toast.error { color: #ff5a4d; }
+@keyframes lt-toast-pop { 0% { transform: translateX(-50%) scale(0.7); } 60% { transform: translateX(-50%) scale(1.1); } 100% { transform: translateX(-50%) scale(1); } }
+
+/* Sell Loot window: gold studded header, dark rows, green studded buttons (mirrors the Roblox reference) */
+.lt-overlay .sl-head { background-color: #f8bf3c; border-bottom-color: #1a6fb8; }
+.lt-overlay .sl-logo { position: absolute; left: 1.2em; top: -1.1em; width: 8.4em; height: 8.4em; z-index: 1; filter: drop-shadow(0 0.15em 0 rgba(0, 0, 0, 0.35)); }
+.lt-overlay .sl-logo svg { display: block; width: 100%; height: 100%; }
+.lt-overlay .sl-head .lt-title { left: 1.9em; font-size: 5.6em; }
+.lt-overlay .sl-panel .lt-body { gap: 1.2em; padding: 2.4em 2.6em 2.2em; }
+.lt-overlay .sl-list { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 1.2em; scrollbar-width: thin; }
+.lt-overlay .sl-row { flex: none; display: flex; align-items: center; gap: 1.6em; padding: 0.8em 2em 0.8em 1em; min-height: 9.6em; box-sizing: border-box; background: #2c2c33; border: 0.2em solid #1b1b22; box-shadow: inset 0 0 0 0.12em #3d3d46; }
+.lt-overlay .sl-icon { font-size: 5.6em; line-height: 1; width: 1.25em; text-align: center; filter: drop-shadow(0 0.04em 0.03em rgba(0, 0, 0, 0.6)); }
+.lt-overlay .sl-name { flex: 1; display: flex; flex-direction: column; gap: 0.2em; font-size: 4em; font-weight: 700; color: #fff; -webkit-text-stroke: 0.1em #000; paint-order: stroke fill; line-height: 1; text-shadow: 0 0.06em 0 #000; }
+.lt-overlay .sl-name i { font-style: normal; font-size: 0.62em; -webkit-text-stroke-width: 0.12em; }
+.lt-overlay .sl-top .sl-name b { font-weight: 700; }
+.lt-overlay .sl-top .sl-name u { text-decoration: none; font-size: 0.5em; color: #ffc93a; -webkit-text-stroke-width: 0.16em; }
+.lt-overlay .sl-lock { background: rgba(0, 0, 0, 0.35); font-size: 3em; padding: 0.15em 0.35em; line-height: 1; }
+.lt-overlay .sl-sell, .lt-overlay .sl-all { background-color: #3ed42b; background-image: var(--lt-studs); background-size: 1.625em 1.625em; border: 0.1em solid #1c1c22; border-bottom: 0.45em solid #1e8f12; box-shadow: inset 0 0.15em 0 rgba(255, 255, 255, 0.3); box-sizing: border-box; display: grid; place-items: center; width: 4.5em; height: 1.7em; font-size: 3.6em; line-height: 1; -webkit-text-stroke: 0.12em #000; paint-order: stroke fill; text-shadow: 0 0.06em 0 #000; }
+.lt-overlay .sl-all { width: 4.1em; height: 1.5em; font-size: 4.4em; }
+.lt-overlay .sl-sell:disabled, .lt-overlay .sl-all:disabled { opacity: 0.45; cursor: default; }
+.lt-overlay .sl-empty { font-size: 2.8em; color: #ddd; text-align: center; padding-top: 3em; }
+
+/* Trails window: purple studded header, coloured sunburst rows, green buy buttons (mirrors the Roblox reference) */
+/* absolute-feeling layout measured off the 1920px reference like the rebirth window (1em = 16px there) */
+.lt-overlay .tr-head { height: 5.7em; background-color: #b45cf0; border-bottom-color: #6a2fb0; }
+.lt-overlay .tr-title { left: 1.75em; font-size: 4.6em; -webkit-text-stroke-width: 0.13em; }
+.lt-overlay .tr-head .lt-close { right: 1.05em; top: 0.75em; width: 3.95em; height: 5.05em; }
+.lt-overlay .tr-head .lt-close::before { font-size: 3.3em; }
+.lt-overlay .tr-body { padding: 2.5em 2em 3.5em; }
+.lt-overlay .tr-list { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 0.55em; padding-right: 0.5em; scrollbar-width: thin; scrollbar-color: #e8a82a transparent; }
+.lt-overlay .tr-row { flex: none; position: relative; display: flex; align-items: center; height: 13em; padding: 0 1.4em 0 1.75em; box-sizing: border-box; border: 0.19em solid #1b2238; box-shadow: inset 0 0 0 0.1em rgba(255, 255, 255, 0.12); background: var(--lt-studs) 0 0 / 1.625em 1.625em, repeating-conic-gradient(from 0deg at 50% 50%, var(--a) 0 7deg, var(--b) 7deg 14deg); }
+.lt-overlay .tr-icon { width: 11.6em; height: 7.8em; margin-right: 2.2em; filter: drop-shadow(0 0.15em 0 rgba(0, 0, 0, 0.35)); }
+.lt-overlay .tr-icon svg { display: block; width: 100%; height: 100%; }
+.lt-overlay .tr-name { flex: 1; display: flex; flex-direction: column; gap: 0.3em; font-size: 2.3em; font-weight: 700; color: #fff; line-height: 1.1; white-space: nowrap; -webkit-text-stroke: 0.14em #000; paint-order: stroke fill; text-shadow: 0 0.06em 0 #000; }
+.lt-overlay .tr-name i { font-style: normal; }
+.lt-overlay .tr-btn { width: 7.2em; height: 2.1em; font-size: 2.3em; line-height: 1; background-color: #3ed42b; background-image: var(--lt-studs); background-size: 1.625em 1.625em; border: 0.1em solid #1c1c22; border-bottom: 0.3em solid #1e8f12; box-shadow: inset 0 0.12em 0 rgba(255, 255, 255, 0.3); box-sizing: border-box; display: grid; place-items: center; -webkit-text-stroke: 0.14em #000; paint-order: stroke fill; text-shadow: 0 0.06em 0 #000; }
+.lt-overlay .tr-btn.buy { filter: grayscale(0.55) brightness(0.85); }
+.lt-overlay .tr-btn.on { background-color: #f6a21c; border-bottom-color: #a3600a; }
+
+/* New-loot reveal */
+.lt-new { position: fixed; inset: 0; z-index: 17; display: grid; place-items: center; pointer-events: none; font-family: Fredoka, system-ui, sans-serif; }
+.lt-new-rays { position: absolute; width: 90vmin; height: 90vmin; border-radius: 50%; background: repeating-conic-gradient(from 0deg, var(--g) 0 8deg, transparent 8deg 20deg); -webkit-mask-image: radial-gradient(circle, #000 0, transparent 68%); mask-image: radial-gradient(circle, #000 0, transparent 68%); opacity: 0.85; animation: lt-spin 6s linear infinite, lt-rays-in 0.4s ease-out; }
+.lt-new.out .lt-new-rays { opacity: 0; transition: opacity 0.5s; }
+.lt-new-box { position: relative; display: flex; flex-direction: column; align-items: center; transition: transform 0.65s cubic-bezier(0.5, -0.2, 0.8, 0.4); animation: lt-pop 0.55s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.lt-new-box span { color: #fff; font-weight: 700; -webkit-text-stroke: 0.14em #000; paint-order: stroke fill; text-shadow: 0 0.06em 0 #000; line-height: 1.1; }
+.lt-new-tag { font-size: 34px; color: #ffe94a !important; animation: lt-wob 0.6s ease-in-out infinite alternate; }
+.lt-new-icon { font-size: 120px; filter: drop-shadow(0 0 18px var(--g)) drop-shadow(0 6px 4px rgba(0, 0, 0, 0.5)); animation: lt-bob 1s ease-in-out infinite alternate; }
+.lt-new-name { font-size: 40px; color: var(--c) !important; }
+.lt-new-rarity { font-size: 24px; }
+@keyframes lt-spin { to { transform: rotate(360deg); } }
+@keyframes lt-rays-in { from { transform: scale(0.2); opacity: 0; } }
+@keyframes lt-pop { from { transform: scale(0) rotate(-20deg); } }
+@keyframes lt-wob { from { transform: rotate(-6deg) scale(1); } to { transform: rotate(6deg) scale(1.15); } }
+@keyframes lt-bob { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+
+/* Digging Tools window (shovels.js) */
+.lt-overlay .sv-head { background-color: #1ec6f6; border-bottom-color: #0a86bd; }
+.lt-overlay .sv-logo { position: absolute; left: 0.8em; top: -1.4em; width: 6em; height: 9.6em; z-index: 1; transform: rotate(35deg); filter: drop-shadow(0 0.15em 0 rgba(0, 0, 0, 0.35)); pointer-events: none; }
+.lt-overlay .sv-icon img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.lt-overlay .sv-logo svg, .lt-overlay .sv-icon svg { display: block; width: 100%; height: 100%; }
+.lt-overlay .sv-head .lt-title { left: 1.7em; font-size: 4.8em; }
+.lt-overlay .sv-world { position: absolute; right: 2.35em; top: 0.16em; width: 5.9em; height: 1.65em; background: #1456e0; border: 0.2em solid #0a1e5c; box-shadow: inset 0 0 0 0.15em #3d86ff; box-sizing: border-box; display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 3.2em; line-height: 1; -webkit-text-stroke: 0.1em #000; paint-order: stroke fill; text-shadow: 0 0.06em 0 #000; }
+.lt-overlay .sv-panel .lt-body { padding: 2.2em 2.6em; }
+.lt-overlay .sv-list { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 1.4em; scrollbar-width: thin; }
+.lt-overlay .sv-row { flex: none; display: flex; align-items: center; gap: 2em; padding: 1em 2.4em 1em 1em; min-height: 12.6em; box-sizing: border-box; background: color-mix(in srgb, var(--bg) 55%, #fff); border: 0.2em solid #1b1b22; }
+.lt-overlay .sv-icon { flex: none; width: 10em; height: 10em; padding: 0.4em; box-sizing: border-box; background: #f3f3f6; border: 0.2em solid #111; }
+.lt-overlay .sv-info { flex: 1; display: flex; flex-direction: column; gap: 0.5em; font-weight: 700; line-height: 1; -webkit-text-stroke: 0.12em #000; paint-order: stroke fill; text-shadow: 0 0.06em 0 #000; color: #fff; }
+.lt-overlay .sv-info b { font-size: 3.3em; font-weight: 700; }
+.lt-overlay .sv-info i { font-style: normal; font-size: 2.6em; color: var(--bg); -webkit-text-stroke-width: 0.1em; }
+.lt-overlay .sv-info u { text-decoration: none; font-size: 2.8em; }
+.lt-overlay .sv-btn { flex: none; width: 4.9em; height: 1.6em; font-size: 3.4em; line-height: 1; background-color: #3ed42b; background-image: var(--lt-studs); background-size: 1.625em 1.625em; border: 0.1em solid #1c1c22 !important; border-bottom: 0.3em solid #1e8f12 !important; box-shadow: inset 0 0.15em 0 rgba(255, 255, 255, 0.3); box-sizing: border-box; display: grid; place-items: center; -webkit-text-stroke: 0.12em #000; paint-order: stroke fill; text-shadow: 0 0.06em 0 #000; }
+.lt-overlay .sv-btn.equipped { background-color: #f6a21c; border-bottom-color: #b36d08 !important; cursor: default; }
+.lt-overlay .sv-btn.equip { background-color: #1aa6e8; border-bottom-color: #0d6ea0 !important; }
+.lt-overlay .sv-btn.locked { font-size: 2.3em; width: 6.6em; height: 2.2em; line-height: 1.05; padding: 0 0.3em; text-align: center; cursor: default; }
+.lt-overlay .sv-btn.poor { filter: saturate(0.55) brightness(0.85); }
+
+/* Touch: the prompt is the E button, sitting above DIG / JUMP. */
+html.touch .lt-prompt { left: auto; right: calc(18px + env(safe-area-inset-right)); bottom: 128px; transform: none; padding: 0.6em 1.1em 0.6em 0.7em; font-size: 18px; touch-action: none; }
+html.touch .lt-prompt kbd { display: none; }
+html.touch .lt-toast { top: 18%; }
+@media (max-height: 420px) { html.touch .lt-prompt { bottom: 112px; font-size: 16px; } }

@@ -5,6 +5,19 @@ export const inputState = {
   look: { dx: 0, dy: 0 }, // raw pixels since the camera last read them
   zoom: 0, // wheel notches since the camera last read them (+ = away)
   jump: false,
+  dig: false, // hold left mouse or E
+  mouse: false, // the left mouse button part of `dig`
+  interact: false, // edge-triggered E press (cleared by interact.js); also what picks loot up
+}
+let mouseDig = false
+// The touch DIG button holds this like the left mouse button.
+export function setDigHeld(on) {
+  mouseDig = on
+  syncDig()
+}
+const syncDig = () => {
+  inputState.mouse = mouseDig
+  inputState.dig = mouseDig || held.has('KeyE')
 }
 
 // One wheel notch per WheelEvent.deltaMode (pixels, lines, pages), so a trackpad
@@ -53,23 +66,35 @@ export function install(showMenu, canvasEl) {
     }
     held.add(e.code)
     if (e.code === 'Space') inputState.jump = true
+    if (e.code === 'KeyE') inputState.interact = true
     recomputeMove()
+    syncDig()
   })
   window.addEventListener('keyup', (e) => {
     held.delete(e.code)
     recomputeMove()
+    syncDig()
   })
   window.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch') return // touch.js owns touch (stick, look, buttons)
     if (e.button === 2 && !lockEverGranted) orbiting = true
     if (e.button === 0 && e.target.tagName === 'CANVAS') {
       armed = true
       requestLock()
+      mouseDig = true
+      syncDig()
     }
   })
   window.addEventListener('pointerup', (e) => {
+    if (e.pointerType === 'touch') return
     if (e.button === 2) orbiting = false
+    if (e.button === 0) {
+      mouseDig = false
+      syncDig()
+    }
   })
   window.addEventListener('pointermove', (e) => {
+    if (e.pointerType === 'touch') return
     if (!orbiting && !locked()) return
     inputState.look.dx += e.movementX || 0
     inputState.look.dy += e.movementY || 0
@@ -87,6 +112,8 @@ export function install(showMenu, canvasEl) {
   window.addEventListener('contextmenu', (e) => e.preventDefault())
   window.addEventListener('blur', () => {
     held.clear()
+    mouseDig = false
+    syncDig()
     orbiting = false
     inputState.jump = false
     recomputeMove()

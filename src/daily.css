@@ -1,0 +1,46 @@
+/* daily rewards window; same viewport-fit em + stud look as the rebirth window (1em = 16px at 1920) */
+.dl-overlay { --studs: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Crect x='4.5' y='4.5' width='18' height='18' rx='4' fill='none' stroke='rgba(0,0,0,0.09)' stroke-width='2'/%3E%3Crect x='3.5' y='3.5' width='18' height='18' rx='4' fill='none' stroke='rgba(255,255,255,0.16)' stroke-width='2'/%3E%3C/svg%3E"); position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; font-family: Fredoka, system-ui, sans-serif; user-select: none; font-size: clamp(3px, min(0.8333vw, 1.62vh), 20px); }
+.dl-overlay[hidden] { display: none; }
+.dl-overlay button { cursor: pointer; border: 0; padding: 0; margin: 0; color: #fff; font: inherit; font-weight: 700; }
+.dl-overlay button:active { transform: scale(0.97); }
+.dl-overlay svg, .dl-overlay img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.dl-wrap { display: flex; flex-direction: column; align-items: center; gap: 1.6em; }
+.dl-panel { width: 72.5em; border: 0.2em solid #1b1f3b; background: rgba(46, 46, 51, 0.96); box-sizing: border-box; }
+.dl-overlay .dl-title, .dl-overlay .dl-card b, .dl-overlay .dl-card i, .dl-overlay .dl-claim { color: #fff; font-style: normal; line-height: 1; white-space: nowrap; -webkit-text-stroke: 0.16em #000; paint-order: stroke fill; text-shadow: 0 0.06em 0 #000; }
+.dl-head { position: relative; height: 7.5em; display: flex; align-items: center; background: #c21bf0 var(--studs) 0 0 / 1.625em 1.625em; border-bottom: 0.7em solid #7a10a0; box-shadow: inset 0 0.15em 0 rgba(255, 255, 255, 0.25); }
+.dl-cal { width: 5.2em; height: 5.2em; margin: 0 1.4em 0 2.2em; flex: none; filter: drop-shadow(0 0.15em 0 rgba(0, 0, 0, 0.35)); }
+.dl-title { font-size: 3.9em; font-weight: 700; -webkit-text-stroke-width: 0.12em; }
+.dl-close { position: absolute; right: 0.75em; top: 0.6em; width: 5.3em; height: 5.45em; background: #e1060a; border: 0.22em solid #1a0606; box-shadow: inset 0 0 0 0.18em #ff3636; box-sizing: border-box; display: grid; place-items: center; }
+.dl-close::before { content: 'X'; font-size: 3.9em; color: #fff; -webkit-text-stroke: 0.15em #000; paint-order: stroke fill; text-shadow: 0 0.05em 0 #000; }
+.dl-body { padding: 1.4em 1.5em 1.5em; }
+.dl-grid { display: grid; grid-template-columns: repeat(3, 14em) 22em; grid-template-rows: repeat(2, 15.5em); grid-auto-flow: column; gap: 1.4em; justify-content: center; }
+.dl-card { position: relative; box-sizing: border-box; border: 0.3em solid #0b2a5e; border-radius: 0.5em; background: #19c0ff var(--studs) 0 0 / 1.625em 1.625em; background-image: var(--studs), linear-gradient(#12d4ff, #0a8be0); box-shadow: inset 0 0 0 0.2em #3a7bff; display: flex; flex-direction: column; align-items: center; padding-top: 0.7em; }
+.dl-card .dl-day { font-size: 1.9em; -webkit-text-stroke-width: 0.15em; }
+.dl-art { flex: 1; width: 100%; min-height: 0; margin: 0.4em 0; display: grid; place-items: center; overflow: hidden; filter: drop-shadow(0 0.06em 0 rgba(0, 0, 0, 0.3)); }
+.dl-overlay .dl-art svg, .dl-overlay .dl-art img { width: 6.4em; height: 6.4em; }
+.dl-art em { font-style: normal; font-size: 5em; line-height: 1; }
+.dl-card .dl-name { font-size: 1.9em; -webkit-text-stroke-width: 0.15em; }
+.dl-card .dl-sub { font-size: 1.35em; font-weight: 700; margin-top: 0.3em; -webkit-text-stroke-width: 0.16em; }
+.dl-card .dl-state { font-size: 1.35em; margin: 0.35em 0 0.7em; -webkit-text-stroke-width: 0.16em; }
+.dl-card.ready .dl-state { color: #7dff4a; }
+.dl-card.claimed .dl-state { color: #ffe35a; }
+.dl-card.claimed { filter: saturate(0.6) brightness(0.85); }
+.dl-big { grid-row: span 2; background-image: var(--studs), linear-gradient(#ffe234, #ff9a1a); border-color: #3a2208; box-shadow: inset 0 0 0 0.2em #ffd23a; padding-top: 0.5em; }
+.dl-overlay .dl-big .dl-day { font-size: 5em; background: linear-gradient(90deg, #ff3a3a, #ffd23a 25%, #3aff6a 50%, #3acfff 75%, #b43aff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; -webkit-text-stroke: 0; text-shadow: none; filter: drop-shadow(0 0.04em 0 #000) drop-shadow(0 0 0.03em #000); }
+.dl-overlay .dl-big .dl-art img, .dl-overlay .dl-big .dl-art svg { width: 13em; height: 13em; }
+.dl-big .dl-name { font-size: 3em; }
+.dl-big .dl-sub { font-size: 1.7em; }
+.dl-big .dl-state { font-size: 3.1em; }
+.dl-claim { width: 30.4em; height: 6.4em; box-sizing: border-box; background: #9a9a9e var(--studs) 0 0 / 1.625em 1.625em; border: 0.12em solid #1c1c22; border-bottom: 0.55em solid #66666b; box-shadow: inset 0 0.2em 0 rgba(255, 255, 255, 0.3); display: grid; place-items: center; }
+.dl-claim.ready { background-color: #4ccf3d; border-bottom-color: #2a8a20; }
+.dl-claim span { font-size: 3.4em; -webkit-text-stroke-width: 0.14em; }
+
+/* active boost pills (under the top boost row) */
+.dl-boosts { position: fixed; right: 1.2vw; top: 33vh; z-index: 11; display: flex; flex-direction: column; gap: 6px; pointer-events: none; font-family: Fredoka, system-ui, sans-serif; }
+.dl-pill { display: flex; flex-direction: column; align-items: center; min-width: 120px; padding: 4px 12px; border: 2px solid #0e2a0a; border-radius: 4px; background: linear-gradient(#a6f04e, #4fcc2d); color: #fff; font-weight: 700; line-height: 1.05; -webkit-text-stroke: 3px #000; paint-order: stroke fill; }
+.dl-pill.strength { background: linear-gradient(#ffe352, #f8ac3a); border-color: #3a2208; }
+.dl-pill b { font-size: 20px; }
+.dl-pill i { font-size: 16px; font-style: normal; }
+
+/* red "!" on the HUD Daily button while a reward is waiting */
+.hud-side.has-reward .hud-side-icon::after { content: '!'; position: absolute; top: -0.15em; right: -0.2em; width: 0.5em; height: 0.5em; border-radius: 50%; background: #e5322d; border: 0.05em solid #fff; color: #fff; font: 800 0.34em/0.5em Fredoka, sans-serif; text-align: center; }

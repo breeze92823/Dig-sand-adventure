@@ -18,6 +18,7 @@ const STEPS = [
   ['scene', 'Shaping the dunes…'],
   ['auth', 'Signing in…'],
   ['avatar', 'Dressing your character…'],
+  ['net', 'Joining the world…'],
 ]
 const done = Object.fromEntries(STEPS.map(([k]) => [k, false]))
 
@@ -66,7 +67,7 @@ function portalUpdate() {
   bloxity.notifyFirstFrame()
 }
 
-// Marks a step complete ('scene' | 'auth' | 'avatar'); safe to call repeatedly.
+// Marks a step complete ('scene' | 'auth' | 'avatar' | 'net'); safe to call repeatedly.
 export function markLoaded(step) {
   if (step in done && !done[step]) {
     done[step] = true

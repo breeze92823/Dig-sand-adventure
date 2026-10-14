@@ -1,0 +1,35 @@
+/* New-player tutorial (tutorial.js): quest banner + SKIP + UI arrow. Sized in the HUD's own unit (--u, same
+   formula as hud.css) so it scales with the screen; text has pixel floors so phones can still read it. */
+.tut-banner { --u: clamp(9px, 0.8333vw, 20px); position: fixed; left: 50%; top: calc(var(--u) * 8.2); transform: translateX(-50%); z-index: 11; pointer-events: none; display: flex; align-items: center; justify-content: center; gap: calc(var(--u) * 1.2); width: max-content; max-width: min(94vw, 90em);
+  font-family: 'Fredoka', 'Arial Rounded MT Bold', 'Trebuchet MS', sans-serif; font-weight: 700; user-select: none; -webkit-user-select: none; }
+.tutorial { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 0; padding: calc(var(--u) * 0.8) calc(var(--u) * 3) calc(var(--u) * 1.1); background: rgba(15, 18, 28, 0.72); border: calc(var(--u) * 0.35) solid #1b1b28; border-radius: calc(var(--u) * 2); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.18), 0 6px 0 rgba(0, 0, 0, 0.3); animation: tut-pop 0.3s ease-out; }
+.tutorial[hidden], .tut-sub[hidden] { display: none; }
+.tut-tag { font-size: max(10px, calc(var(--u) * 1.5)); letter-spacing: 2px; color: #ffd23a; }
+.tut-text { font-size: max(15px, calc(var(--u) * 2.5)); color: #fff; line-height: 1.12; -webkit-text-stroke: max(3px, calc(var(--u) * 0.4)) #1b1b28; paint-order: stroke fill; }
+.tut-sub { font-size: max(12px, calc(var(--u) * 1.6)); color: #e8f0ff; margin-top: 2px; line-height: 1.2; }
+.tutorial.complete { border-color: #1d5a22; background: rgba(12, 40, 18, 0.74); }
+.tutorial.complete .tut-tag, .tutorial.complete .tut-text { color: #8dff8a; }
+@keyframes tut-pop { 0% { transform: scale(0.7); opacity: 0; } 70% { transform: scale(1.06); } 100% { transform: scale(1); opacity: 1; } }
+
+.tut-skip { flex: none; pointer-events: auto; cursor: pointer; touch-action: manipulation; font: inherit; font-size: max(13px, calc(var(--u) * 1.8)); letter-spacing: 1px; color: #fff; -webkit-text-stroke: max(3px, calc(var(--u) * 0.35)) #7a1010; paint-order: stroke fill;
+  min-height: 40px; padding: calc(var(--u) * 0.7) calc(var(--u) * 2); background: linear-gradient(#ff6a5a, #e02a2a); border: max(3px, calc(var(--u) * 0.3)) solid #7a1010; border-radius: calc(var(--u) * 1.2); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.35), 0 4px 0 #7a1010; }
+.tut-skip:hover { background: linear-gradient(#ff8576, #f03c3c); }
+.tut-skip:active { transform: translateY(2px); }
+.tut-skip[hidden] { display: none; }
+
+/* Small / touch screens (html.compact, device.js): clear the left stats column and the right depth bar / menu,
+   drop the panel chrome so the text floats over the world, and keep SKIP a thumb-sized target. */
+html.compact .tut-banner { --u: calc(min(0.8333vw, 1.62vh) * 1.4); max-width: calc(100vw - var(--u) * 26); gap: 8px; }
+html.compact .tutorial { padding: 2px 6px 4px; background: none; border: 0; box-shadow: none; }
+html.compact .tut-tag, html.compact .tut-sub { -webkit-text-stroke: 3px #1b1b28; paint-order: stroke fill; }
+html.compact .tut-skip { min-height: 36px; min-width: 52px; padding: 4px 12px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35), 0 3px 0 #7a1010; }
+
+/* Sits above the element (data-side=top, pointing down) or below it (data-side=bottom, pointing up). */
+.tut-arrow { position: fixed; z-index: 60; width: 54px; height: 72px; pointer-events: none; transform: translate(-50%, -100%); filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.35)); }
+.tut-arrow[hidden] { display: none; }
+.tut-arrow svg { display: block; width: 100%; height: 100%; animation: tut-bob 0.7s ease-in-out infinite; }
+.tut-arrow[data-side='bottom'] { transform: translate(-50%, 0) rotate(180deg); }
+html.compact .tut-arrow { width: 42px; height: 56px; }
+@keyframes tut-bob { 50% { transform: translateY(12px); } }
+.tut-hl { animation: tut-glow 0.9s ease-in-out infinite; }
+@keyframes tut-glow { 50% { box-shadow: 0 0 0 6px rgba(255, 210, 58, 0.95), 0 0 24px 8px rgba(255, 210, 58, 0.7); } }
